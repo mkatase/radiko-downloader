@@ -17,15 +17,15 @@ $ sudo dnf install ffmpeg swftools
 Fedoraにて、ffmpegをInstallするには、rpmfusionのrepositoryを追加しておく必要があります。
 
 ## Addtional Python Modules
-- beautifulsoup4
-- selenium
-- chromedriver-binary==86.0.4240.22.0
+- bs4 0.0.1
+- selenium 3.141.0
+- chromedriver-binary 87.0.4280.20.0
 
 ```python
 $ pip install -r requirements.txt
 ```
 
-chromedriver-binaryは、2020/10/17時点のChromeのStableに合わせています。
+chromedriver-binaryは、2020/11/18時点のChromeのStableに合わせています。
 
 ```python
 $ pip install chromedriver_binary==
