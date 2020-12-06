@@ -1,17 +1,17 @@
 # A super simple radiko TimeFree downloader Improved
 radikoのTime Free用Downloaderです。
-[morinokamiさん](https://github.com/morinokami/radiko-downloader)のScriptに変更を加えたものです。
+[morinokamiさん](https://github.com/morinokami/radiko-downloader)のScriptと
+[うる。さん](https://github.com/uru2/rec_radiko_ts)のScriptを参考にし、改良したものです。
 
-## Modification Points
-- PhantomJSからChromedriverへ変更
-- 出力時のFile名に日付を付加
+## Modification Points v0.2.0
+- Flash関連部分の削除
+- 月末日深夜の日付処理の変更
 
 ## Addtional Programs
 - ffmpeg
-- swftools
 
 ```bash
-$ sudo dnf install ffmpeg swftools
+$ sudo dnf install ffmpeg
 ```
 
 Fedoraにて、ffmpegをInstallするには、rpmfusionのrepositoryを追加しておく必要があります。
@@ -19,13 +19,13 @@ Fedoraにて、ffmpegをInstallするには、rpmfusionのrepositoryを追加し
 ## Addtional Python Modules
 - bs4 0.0.1
 - selenium 3.141.0
-- chromedriver-binary 87.0.4280.20.0
+- chromedriver-binary 86.0.4240.22.0
 
 ```python
 $ pip install -r requirements.txt
 ```
 
-chromedriver-binaryは、2020/11/18時点のChromeのStableに合わせています。
+chromedriver-binaryは、2020/12/06時点のChromeのStableに合わせています。
 
 ```python
 $ pip install chromedriver_binary==
@@ -44,3 +44,5 @@ $ python radiko.py 'http://radiko.jp/#!/ts/<station_id>/<ft>'
 
 ## Thanks to
 - [morinokamiさん](https://github.com/morinokami)
+- [うる。さん](https://github.com/uru2/rec_radiko_ts)
+

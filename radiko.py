@@ -1,10 +1,18 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# version 0.1.0 2020-11-18 new creation
+# version 0.2.0 2020-12-06 deleted download_player(), create_key()
+#                          deleted teardown()
+#                          modified create_partial_key()
+#                          added day handling in set_title()
 
 import argparse
 import base64
 import os
 import re
 import subprocess
+from datetime import datetime, timedelta
 from xml.etree import ElementTree as ET
 
 from bs4 import BeautifulSoup
@@ -17,10 +25,8 @@ from spinner import Spinner, spinner_decorator
 
 
 class Radiko:
-    
-    player_name = 'myplayer-release.swf'
-    key_name = 'authkey.png'
-    player_url = 'http://radiko.jp/apps/js/flash/' + player_name
+
+    auth_key = 'bcd151073c03b352e1ef2fd66c32209da9ca0afa'
     fms1_url = 'https://radiko.jp/v2/api/auth1_fms'
     fms2_url = 'https://radiko.jp/v2/api/auth2_fms'
 
@@ -45,13 +51,17 @@ class Radiko:
         options = Options()
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
-        #driver = webdriver.PhantomJS(executable_path='./phantomjs', service_log_path=os.path.devnull)
         
         driver.get(self.url)
         html = driver.page_source.encode('utf-8')
+
         soup = BeautifulSoup(html, 'html.parser')
         hidden_input = soup.find('input', id='share-url')
-        self.stream_url = str(hidden_input['value'])
+        try:
+            self.stream_url = str(hidden_input['value'])
+        except TypeError:
+            print('hidden_input is empty !! Try again !!')
+            exit()
 
         pat = r'station_id=(?P<station_id>[A-Z\-]+)&ft=(?P<ft>[0-9]+)&to=(?P<to>[0-9]+)'
         match = re.search(pat, self.stream_url)
@@ -61,24 +71,11 @@ class Radiko:
             self.to = match.group('to')
     
     def authenticate(self):
-        @spinner_decorator('Downloading player... ', 'done')
-        def download_player():
-            r = requests.get(self.player_url)
-            if r.status_code == 200:
-                with open('myplayer-release.swf', 'wb') as f:
-                    f.write(r.content)
-        
-        @spinner_decorator('Creating key file... ', 'done')
-        def create_key():
-            subprocess.call('swfextract -b 12 {} -o {}'.format(self.player_name, self.key_name), shell=True)
-        
         @spinner_decorator('Authenticating with auth1_fms... ', 'done')
         def auth1():
             headers = {
-                'Host': 'radiko.jp',
-                'pragma': 'no-cache',
-                'X-Radiko-App': 'pc_ts',
-                'X-Radiko-App-Version': '4.0.0',
+                'X-Radiko-App': 'pc_html5',
+                'X-Radiko-App-Version': '0.0.1',
                 'X-Radiko-User': 'test-stream',
                 'X-Radiko-Device': 'pc'
             }
@@ -89,32 +86,27 @@ class Radiko:
                 self.auth_token = response_headers['x-radiko-authtoken']
                 self.key_offset = int(response_headers['x-radiko-keyoffset'])
                 self.key_length = int(response_headers['x-radiko-keylength'])
+            else:
+                print(' Status Code := {}'.format(r.status_code))
         
         @spinner_decorator('Creating partial key file... ', 'done')
         def create_partial_key():
-            with open(self.key_name, 'rb+') as f:
-                f.seek(self.key_offset)
-                data = f.read(self.key_length)
-                self.partial_key = base64.b64encode(data)
+            tmp_key = self.auth_key[self.key_offset: self.key_offset + self.key_length]
+            self.partial_key = base64.b64encode(tmp_key.encode('utf-8')).decode('utf-8')
         
         @spinner_decorator('Authenticating with auth2_fms... ', 'done')
         def auth2():
             headers ={
-                'pragma': 'no-cache',
-                'X-Radiko-App': 'pc_ts',
-                'X-Radiko-App-Version': '4.0.0',
                 'X-Radiko-User': 'test-stream',
                 'X-Radiko-Device': 'pc',
-                'X-Radiko-Authtoken': self.auth_token,
-                'X-Radiko-Partialkey': self.partial_key,
+                'X-Radiko-Authtoken': '{}'.format(self.auth_token),
+                'X-Radiko-Partialkey': '{}'.format(self.partial_key),
             }
             r = requests.post(url=self.fms2_url, headers=headers)
 
             if r.status_code == 200:
                 self.auth_response_body = r.text
         
-        download_player()
-        create_key()
         auth1()
         create_partial_key()
         auth2()
@@ -135,7 +127,9 @@ class Radiko:
                 prog = station.find('.//prog[@ft="{}"]'.format(self.ft))
                 to = prog.attrib['to']
         except AttributeError:
-            datetime_api_url = 'http://radiko.jp/v3/program/date/{}/{}.xml'.format(int(self.ft[:8]) - 1, self.area_id)
+            n = datetime.strptime(self.ft[:8], '%Y%m%d')
+            d = n - timedelta(days=1)
+            datetime_api_url = 'http://radiko.jp/v3/program/date/{}/{}.xml'.format(d.strftime('%Y%m%d'), self.area_id)
             r = requests.get(url=datetime_api_url)
             if r.status_code == 200:
                 channels_xml = r.content
@@ -152,10 +146,6 @@ class Radiko:
         self.set_area_id()
         self.set_title()
     
-    def teardown(self):
-        os.remove(self.player_name)
-        os.remove(self.key_name)
-
     def download(self):
         self.setup()
         
@@ -175,9 +165,6 @@ class Radiko:
         subprocess.call(cmd, shell=True)
         self.spinner.stop()
         print('done!')
-
-        self.teardown()
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
