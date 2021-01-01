@@ -6,6 +6,7 @@
 #                          deleted teardown()
 #                          modified create_partial_key()
 #                          added day handling in set_title()
+# version 0.3.0 2021-01-01 modified station_id for regular expression
 
 import argparse
 import base64
@@ -51,7 +52,7 @@ class Radiko:
         options = Options()
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
-        
+
         driver.get(self.url)
         html = driver.page_source.encode('utf-8')
 
@@ -63,7 +64,7 @@ class Radiko:
             print('hidden_input is empty !! Try again !!')
             exit()
 
-        pat = r'station_id=(?P<station_id>[A-Z\-]+)&ft=(?P<ft>[0-9]+)&to=(?P<to>[0-9]+)'
+        pat = r'station_id=(?P<station_id>[A-Z]+.*)&ft=(?P<ft>[0-9]+)&to=(?P<to>[0-9]+)'
         match = re.search(pat, self.stream_url)
         if match:
             self.station_id = match.group('station_id')

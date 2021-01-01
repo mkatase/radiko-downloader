@@ -3,9 +3,10 @@ radikoのTime Free用Downloaderです。
 [morinokamiさん](https://github.com/morinokami/radiko-downloader)のScriptと
 [うる。さん](https://github.com/uru2/rec_radiko_ts)のScriptを参考にし、改良したものです。
 
-## Modification Points v0.2.0
-- Flash関連部分の削除
-- 月末日深夜の日付処理の変更
+## Modification Points
+- station_id取得処理の修正 (v0.3.0)
+- Flash関連部分の削除 (v0.2.0)
+- 月末日深夜の日付処理の変更 (v0.2.0)
 
 ## Addtional Programs
 - ffmpeg
