@@ -19,14 +19,14 @@ Fedoraにて、ffmpegをInstallするには、rpmfusionのrepositoryを追加し
 
 ## Addtional Python Modules
 - bs4 0.0.1
-- selenium 3.141.0
-- chromedriver-binary 86.0.4240.22.0
+- selenium 4.15.0
+- chromedriver-binary 101.0.4951.41.0
 
 ```python
 $ pip install -r requirements.txt
 ```
 
-chromedriver-binaryは、2020/12/06時点のChromeのStableに合わせています。
+chromedriver-binaryは、2022/05/12時点のChromeのStableに合わせています。
 
 ```python
 $ pip install chromedriver_binary==
