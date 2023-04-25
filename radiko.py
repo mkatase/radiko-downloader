@@ -7,6 +7,7 @@
 #                          modified create_partial_key()
 #                          added day handling in set_title()
 # version 0.3.0 2021-01-01 modified station_id for regular expression
+# version 0.4.0 2023-04-26 modified modfied auth url
 
 import argparse
 import base64
@@ -28,8 +29,8 @@ from spinner import Spinner, spinner_decorator
 class Radiko:
 
     auth_key = 'bcd151073c03b352e1ef2fd66c32209da9ca0afa'
-    fms1_url = 'https://radiko.jp/v2/api/auth1_fms'
-    fms2_url = 'https://radiko.jp/v2/api/auth2_fms'
+    fms1_url = 'https://radiko.jp/v2/api/auth1'
+    fms2_url = 'https://radiko.jp/v2/api/auth2'
 
     def __init__(self, url):
         self.url = url
@@ -80,7 +81,7 @@ class Radiko:
                 'X-Radiko-User': 'test-stream',
                 'X-Radiko-Device': 'pc'
             }
-            r = requests.post(url=self.fms1_url, headers=headers)
+            r = requests.get(url=self.fms1_url, headers=headers)
             
             if r.status_code == 200:
                 response_headers = r.headers
@@ -103,7 +104,7 @@ class Radiko:
                 'X-Radiko-Authtoken': '{}'.format(self.auth_token),
                 'X-Radiko-Partialkey': '{}'.format(self.partial_key),
             }
-            r = requests.post(url=self.fms2_url, headers=headers)
+            r = requests.get(url=self.fms2_url, headers=headers)
 
             if r.status_code == 200:
                 self.auth_response_body = r.text

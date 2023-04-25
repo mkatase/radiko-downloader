@@ -4,6 +4,7 @@ radikoのTime Free用Downloaderです。
 [うる。さん](https://github.com/uru2/rec_radiko_ts)のScriptを参考にし、改良したものです。
 
 ## Modification Points
+- auth urlの修正 (v0.4.0)
 - station_id取得処理の修正 (v0.3.0)
 - Flash関連部分の削除 (v0.2.0)
 - 月末日深夜の日付処理の変更 (v0.2.0)
@@ -17,16 +18,20 @@ $ sudo dnf install ffmpeg
 
 Fedoraにて、ffmpegをInstallするには、rpmfusionのrepositoryを追加しておく必要があります。
 
+## Base Environment
+- Fedora 38 6.2.11-300.fc38.x86_64
+- Python 3.11.3
+
 ## Addtional Python Modules
 - bs4 0.0.1
-- selenium 4.15.0
-- chromedriver-binary 101.0.4951.41.0
+- selenium 4.9.0
+- chromedriver-binary 112.0.5615.49.0
 
 ```python
 $ pip install -r requirements.txt
 ```
 
-chromedriver-binaryは、2022/05/12時点のChromeのStableに合わせています。
+chromedriver-binaryは、2023/04/26時点のChromeのStableに合わせています。
 
 ```python
 $ pip install chromedriver_binary==
