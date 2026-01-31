@@ -3,6 +3,10 @@ radikoのTime Free用Downloaderです。
 [morinokamiさん](https://github.com/morinokami/radiko-downloader)のScriptと
 [うる。さん](https://github.com/uru2/rec_radiko_ts)のScriptを参考にし、改良したものです。
 
+# 非推奨のお知らせ (2026-01-31)
+radikoの仕様変更(2026.01)に伴い、本scriptは、動作致しません。後継のscriptを用意しました
+ので、[こちら](http://github.com/mkatase/radiko)をご覧ください。
+
 ## Modification Points
 - auth urlの修正 (v0.4.0)
 - station_id取得処理の修正 (v0.3.0)
