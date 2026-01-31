@@ -5,7 +5,7 @@ radikoのTime Free用Downloaderです。
 
 # 非推奨のお知らせ (2026-01-31)
 radikoの仕様変更(2026.01)に伴い、本scriptは、動作致しません。後継のscriptを用意しました
-ので、[こちら](http://github.com/mkatase/radiko)をご覧ください。
+ので、[こちら](http://github.com/mkatase/radico)をご覧ください。
 
 ## Modification Points
 - auth urlの修正 (v0.4.0)
